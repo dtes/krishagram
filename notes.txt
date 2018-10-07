@@ -1,0 +1,10 @@
+Замечания:
+  1) Не скролиться когда попадаешь на текст-инпут; x
+  
+
+Задачи:
+  1) Object details page;
+    1.1) Shared Element Transition;
+  2) Krisha API;
+    2.1) Search filter
+    2.2) Search result
