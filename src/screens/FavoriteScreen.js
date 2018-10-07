@@ -8,7 +8,7 @@ class FavoriteScreen extends Component {
 
   static navigationOptions = {
     title: 'Избранное',
-    drawerIcon: (<Icon name="ios-star" />)
+    drawerIcon: ({ tintColor }) => (<Icon name="ios-star" style={{ color: tintColor }} />)
   }
 
   render() {
@@ -17,7 +17,7 @@ class FavoriteScreen extends Component {
       <Container>
 
         <Header style={{ backgroundColor: 'white' }}>
-          <DrawerButton navigation={this.props.navigation}/>
+          <DrawerButton navigation={this.props.navigation} />
           <Body>
             <Text>Избранное</Text>
           </Body>

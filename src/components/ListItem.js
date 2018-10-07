@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const width = SCREEN_WIDTH + 1;
+const width = SCREEN_WIDTH;
 const height = 325;
 const photoHeight = 230;
 
@@ -21,16 +21,14 @@ class ListItem extends Component {
   }
 
   showDetails = () => {
-    this.opened = !this.opened;
-    Animated.timing(this.itemHeight, {
-      toValue: this.opened ? SCREEN_HEIGHT : height,
-      duration: 300
-    }).start();
+    if (this.props.onOpen) {
+      this.props.onOpen(this.props.item.id)
+    }
   }
 
   render() {
     return (
-      <Animated.View style={[{ height: this.itemHeight }, ]}>
+      <View style={{ height }}>
 
         <View style={{ height: photoHeight }}>
 
@@ -77,7 +75,7 @@ class ListItem extends Component {
           </View>
         </TouchableWithoutFeedback>
 
-      </Animated.View>
+      </View>
 
     );
   }

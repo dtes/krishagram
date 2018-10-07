@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Container, Header, Body, Content } from 'native-base';
 import { createDrawerNavigator, DrawerItems, createStackNavigator } from 'react-navigation';
+import { Icon } from 'native-base';
+
 import MainScreen from './src/screens/MainScreen';
 import FavoriteScreen from './src/screens/FavoriteScreen';
 import SearchScreen from './src/screens/SearchScreen';
-import { Icon } from 'native-base';
+import DetailsScreen from './src/screens/DetailsScreen';
 
 
 export default class App extends Component {
@@ -35,7 +37,8 @@ const CustomDrawContentComponent = (props) => (
 
 const MainScreenStackNavigator = createStackNavigator({
   MainScreen: { screen: MainScreen },
-  SearchScreen: { screen: SearchScreen }
+  SearchScreen: { screen: SearchScreen },
+  DetailsScreen: { screen: DetailsScreen },
 }, {
     headerMode: 'none'
   });
@@ -43,7 +46,7 @@ const MainScreenStackNavigator = createStackNavigator({
 MainScreenStackNavigator.navigationOptions = {
   header: null,
   title: 'Главная',
-  drawerIcon: (<Icon name="ios-home" style={{color: '#0095ff'}} />)
+  drawerIcon: ({ tintColor }) => (<Icon name="ios-home" style={{ color: tintColor }} />)
 }
 
 const RootNavigator = createDrawerNavigator({
