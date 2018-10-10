@@ -1,14 +1,14 @@
 Замечания:
   1) Не скролиться когда попадаешь на текст-инпут; x
   2) Открывается drawer menu в DeatilsScreen.
-  3) flex layout performance;
+  3) check flex layout performance;
 
 
 Задачи:
   1) Object details page;
     1.1) Shared Element(Photo carousel) Transition; -
     1.2) Base information(fields); x
-  2) Krisha API;
+  2) Krisha API;  
     2.1) Search filter;
     2.2) Search result;
   3) Logo, Splash screen, StatusBar;

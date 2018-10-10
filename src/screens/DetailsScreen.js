@@ -48,7 +48,7 @@ class DetailsScreen extends Component {
               <Text style={{ color: 'black' }}>{item.description}</Text>
             </View>
 
-            <View style={{ height: 65 }}></View>
+            <View style={{ height: 70 }}></View>
           </ScrollView>
 
           {/* Fixed buttons */}

@@ -126,7 +126,7 @@ class SearchScreen extends Component {
 
               {/* Price */}
               <View style={styles.inputSection}>
-                <TextInputFromTo title="Цена" keyboardType='numeric'/>
+                <TextInputFromTo title="Цена" keyboardType='numeric' />
               </View>
 
               {/* From owner */}
@@ -178,6 +178,14 @@ class SearchScreen extends Component {
               <View style={styles.inputSection}>
                 <TextInputFromTo title="Этаж" keyboardType='numeric' />
               </View>
+
+              {/* Land square */}
+              {
+                this.state.selectedObjectType == 2 ?
+                  <View style={styles.inputSection}>
+                    <TextInputFromTo title="Площадь участка, соток" keyboardType='numeric' />
+                  </View> : null
+              }
 
               {/* Total square */}
               <View style={styles.inputSection}>
