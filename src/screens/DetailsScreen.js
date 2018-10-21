@@ -4,21 +4,29 @@ import { Container, Content, Header, Left, Right, Body, Icon, Button } from 'nat
 import ListItem from '../components/ListItem';
 import { items } from '../data';
 import { Fields } from '../components/SimpleComponents';
+import * as krishaApi from '../krishApi';
+
 
 class DetailsScreen extends Component {
   static navigationOptions = {
     drawerLockMode: 'locked-open',
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
+  componentDidMount() {
+    // let id = this.props.navigation.getParam('id')
+
+    // krishaApi
+    //   .item(id)
+    //   .then(item => this.setState({
+    //     isLoading: false,
+    //     item,
+    //   }))
   }
 
   render() {
-    const id = this.props.navigation.getParam('id');
-    const item = items.find((item) => item.id == id)
+    // const id = this.props.navigation.getParam('id');
+    // const item = items.find((item) => item.id == id)
+    const item = this.props.navigation.getParam('item');
 
     return (
       <Container>
@@ -41,11 +49,11 @@ class DetailsScreen extends Component {
             <ListItem item={item} />
 
             {/* Fields */}
-            <Fields fields={item.fields} style={{ paddingHorizontal: 15 }} />
+            <Fields fields={krishaApi.getFields(item)} style={{ paddingHorizontal: 15 }} />
 
-            {/* Deacription */}
+            {/* Description */}
             <View style={{ paddingHorizontal: 15, paddingVertical: 15 }}>
-              <Text style={{ color: 'black' }}>{item.description}</Text>
+              <Text style={{ color: 'black' }}>{item.data.text}</Text>
             </View>
 
             <View style={{ height: 70 }}></View>

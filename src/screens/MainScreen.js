@@ -1,12 +1,39 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, StyleSheet, FlatList, StatusBar } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator } from 'react-native';
 import { Container, Content, Header, Body, Icon, Left, Right } from 'native-base';
 import { DrawerButton } from '../components/SimpleComponents';
 import ListItem from '../components/ListItem';
 import { items } from '../data';
+import * as krishaApi from '../krishApi';
 
 
 class MainScreen extends Component {
+
+  state = {
+    loading: true,
+    refreshing: false,
+    loadingMore: false,
+    page: 1,
+    items: [],
+  }
+
+  componentDidMount() {
+    this.loadItems();
+  }
+
+  loadItems = () => {
+    krishaApi
+      .list({ page: this.state.page })
+      .then(result => {
+        // console.log({ result })
+        this.setState({
+          items: this.state.refreshing ? result : [...this.state.items, ...result],
+          loading: false,
+          // loadingMore: false,
+          refreshing: false,
+        })
+      });
+  }
 
   openSearch = () => {
     this.props.navigation.navigate('SearchScreen')
@@ -18,8 +45,36 @@ class MainScreen extends Component {
     <ListItem item={item} onOpen={this.onOpen} />
   )
 
-  onOpen = (id) => {
-    this.props.navigation.navigate('DetailsScreen', { id })
+  renderFooter = () => (
+    <View>
+      {this.state.loadingMore ?
+        <ActivityIndicator style={{ paddingVertical: 15 }} size="large" />
+        : null
+      }
+    </View>
+  )
+
+  loadMore = () => {
+    this.setState({
+      page: this.state.page + 1,
+      loadingMore: true,
+      // loading: true,
+    }, () => {
+      setTimeout(() => this.loadItems(), 200);
+    })
+  }
+
+  onRefresh = () => {
+    this.setState({
+      page: 1,
+      refreshing: true,
+    }, () => {
+      this.loadItems();
+    })
+  }
+
+  onOpen = (item) => {
+    this.props.navigation.navigate('DetailsScreen', { item })
   }
 
   render() {
@@ -45,13 +100,26 @@ class MainScreen extends Component {
 
         <Content contentContainerStyle={styles.container}>
 
+          {this.state.loading ?
+            <ActivityIndicator
+              style={this.state.loadingMore ? null : styles.spinner}
+              size="large" />
+            : null
+          }
+
           <FlatList
+            style={{ flex: 1 }}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-            data={items}
+            data={this.state.items}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
+            ListFooterComponent={this.renderFooter}
+            onEndReached={this.loadMore}
+            onRefresh={this.onRefresh}
+            refreshing={this.state.refreshing}
           />
+
         </Content>
       </Container>
     );
@@ -63,6 +131,7 @@ export default MainScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     // paddingTop: 10,
   },
   title: {
@@ -71,5 +140,9 @@ const styles = StyleSheet.create({
     // backgroundColor: '#eee',
     // borderRadius: 3,
     // marginLeft: 5,
-  }
+  },
+  spinner: {
+    ...StyleSheet.absoluteFill,
+    paddingVertical: 15,
+  },
 });

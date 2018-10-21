@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, Animated, Alert, TouchableWithoutFeedback } from 'react-native';
 import { Icon } from 'native-base';
 import Swiper from 'react-native-swiper';
+import { months } from '../data';
+
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -9,7 +11,7 @@ const width = SCREEN_WIDTH;
 const height = 325;
 const photoHeight = 230;
 
-class ListItem extends Component {
+class ListItem extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,8 +24,60 @@ class ListItem extends Component {
 
   showDetails = () => {
     if (this.props.onOpen) {
-      this.props.onOpen(this.props.item.id)
+      this.props.onOpen(this.props.item)
     }
+  }
+
+  getTitle = (item) => {
+    switch (item.service_data.cat_id) {
+      case 1:
+      case 2:
+        return `${item.data['live.rooms']}-комн - ${item.data['live.square']} м² - ${item.data['house.floor_num']} этажей`
+      case 3:
+        return `${item.data['live.rooms']}-комн - ${item.data['live.square']} м² - ${item.data['land.square']} сот`
+      case 14:
+        let unit = item.data['land.square_au'] == 2 ? 'сот' : 'га';
+        return `Участок ${item.data['land.square_a']} ${unit}`
+      case 12:
+        return `Офис площадью ${item.data['com.square']}`
+      case 44:
+      case 45:
+        return `Помещение площадью ${item.data['com.square']}`
+      case 11:
+        return `Магазин площадью ${item.data['com.square']}`
+      case 17:
+      case 18:
+        return item.data['title']
+      case 7:
+        return `Здание площадью ${item.data['com.square']}`
+      case 5:
+        return `Дача с участком ${item.data['land.square']} сот`
+      case 16:
+        return 'Склад или промбаза'
+      case 9:
+        return `${item.data['live.rooms']} комнаты - ${item.data['live.square']} м²`
+      default:
+        return 'Название не опр.'
+    }
+  }
+
+  getPrice = (item) => {
+    let parts = item.data.price.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return parts.join(".") + ' ₸'
+  }
+
+  getAddress = (item) => {
+    let city = item.data['map.city']
+    let district = item.data['map.district']
+    let street = item.data['map.street']
+    let geoText = item.data['map.geo_text']
+    return city && district && street ? `${city}, ${district}, ул. ${street}` : geoText
+  }
+
+  getDtPublic = (item) => {
+    let dt = new Date(item.service_data.published_at);
+    return `${dt.getDate()} ${months[dt.getMonth() + 1]}`
   }
 
   render() {
@@ -39,16 +93,21 @@ class ListItem extends Component {
             paginationStyle={styles.pagination}
             loop={false}
           >
-            {this.props.item.images.map((image, idx) => (
-              <View key={idx} style={styles.slide}>
-                <Image
-                  style={styles.image}
-                  source={image.source}
-                  resizeMode='cover'
-                />
-                <Text>{image.url}</Text>
-              </View>
-            ))}
+            {/* render photos */}
+            {Object.keys(this.props.item.Files || []).map((key, idx) => {
+              // let uri = this.props.item.Files[key].path
+              let uri = this.props.item.Files[key].thumbnails[0].path
+              return (
+                <View key={idx} style={styles.slide}>
+                  <Image
+                    style={styles.image}
+                    source={{ uri }}
+                    resizeMode='cover'
+                  />
+                </View>
+              )
+            }
+            )}
           </Swiper>
         </View>
 
@@ -59,18 +118,18 @@ class ListItem extends Component {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon name={this.props.item.favorite ? 'star' : 'star-o'} type='FontAwesome' style={styles.icon} />
                 <Icon name='eye' type='FontAwesome' style={styles.icon} />
-                <Text>{this.props.item.viewCount}</Text>
+                <Text>{Math.round(Math.random() * 350)}</Text>
               </View>
               {/* Public date */}
-              <Text style={{ fontWeight: 'bold' }}>{this.props.item.dtPublic}</Text>
+              <Text style={{ fontWeight: 'bold' }}>{this.getDtPublic(this.props.item)}</Text>
             </View>
 
             <View style={styles.titleRow1}>
-              <Text style={styles.title}>{this.props.item.title}</Text>
-              <Text style={styles.price}>{this.props.item.price}</Text>
+              <Text style={styles.title}>{this.getTitle(this.props.item)}</Text>
+              <Text style={styles.price}>{this.getPrice(this.props.item)}</Text>
             </View>
             <View style={styles.titleRow2}>
-              <Text style={styles.address}>{this.props.item.address}</Text>
+              <Text style={styles.address}>{this.getAddress(this.props.item)}</Text>
             </View>
           </View>
         </TouchableWithoutFeedback>
