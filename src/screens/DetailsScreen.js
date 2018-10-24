@@ -3,7 +3,7 @@ import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { Container, Content, Header, Left, Right, Body, Icon, Button } from 'native-base';
 import ListItem from '../components/ListItem';
 import { items } from '../data';
-import { Fields } from '../components/SimpleComponents';
+import { Fields } from '../components/StatelessComponents';
 import * as krishaApi from '../krishApi';
 
 

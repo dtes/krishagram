@@ -1,25 +1,17 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, Animated, Alert, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Image, StyleSheet, Animated, Alert, TouchableWithoutFeedback } from 'react-native';
 import { Icon } from 'native-base';
 import Swiper from 'react-native-swiper';
 import { months } from '../data';
+import { ITEM_WIDTH, ITEM_HEIGHT, ITEM_PHOTO_HEIGHT } from '../Consts';
 
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const width = SCREEN_WIDTH;
-const height = 325;
-const photoHeight = 230;
+const DEFAULT_PHOTO = '../../assets/img/mask-item.png'
 
 class ListItem extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
     };
-  }
-
-  componentWillMount() {
-    this.itemHeight = new Animated.Value(height);
   }
 
   showDetails = () => {
@@ -81,10 +73,12 @@ class ListItem extends PureComponent {
   }
 
   render() {
-    return (
-      <View style={{ height }}>
+    let files = this.props.item.Files || []
 
-        <View style={{ height: photoHeight }}>
+    return (
+      <View style={{ height: ITEM_HEIGHT }}>
+
+        <View style={{ height: ITEM_PHOTO_HEIGHT }}>
 
           {/* Photo Carousel */}
           <Swiper
@@ -94,7 +88,7 @@ class ListItem extends PureComponent {
             loop={false}
           >
             {/* render photos */}
-            {Object.keys(this.props.item.Files || []).map((key, idx) => {
+            {Object.keys(files).map((key, idx) => {
               // let uri = this.props.item.Files[key].path
               let uri = this.props.item.Files[key].thumbnails[0].path
               return (
@@ -157,8 +151,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width,
-    height: photoHeight
+    width: ITEM_WIDTH,
+    height: ITEM_PHOTO_HEIGHT
   },
   titleRow0: {
     paddingTop: 7,

@@ -1,10 +1,26 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Text, StyleSheet, FlatList, StatusBar, ActivityIndicator } from 'react-native';
-import { Container, Content, Header, Body, Icon, Left, Right } from 'native-base';
-import { DrawerButton } from '../components/SimpleComponents';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  ImageBackground,
+} from 'react-native';
+import {
+  Container,
+  Content,
+  Header,
+  Body,
+  Icon,
+  Left,
+  Right,
+} from 'native-base';
+import { DrawerButton } from '../components/StatelessComponents';
 import ListItem from '../components/ListItem';
 import { items } from '../data';
 import * as krishaApi from '../krishApi';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../Consts';
 
 
 class MainScreen extends Component {
@@ -101,9 +117,16 @@ class MainScreen extends Component {
         <Content contentContainerStyle={styles.container}>
 
           {this.state.loading ?
-            <ActivityIndicator
-              style={this.state.loadingMore ? null : styles.spinner}
-              size="large" />
+            (
+              <ImageBackground
+                style={{ flex: 1, width: SCREEN_WIDTH }}
+                source={require('../../assets/img/mask-item.png')}>
+                <ActivityIndicator
+                  style={this.state.loadingMore ? null : styles.spinner}
+                  size="large"
+                />
+              </ImageBackground>
+            )
             : null
           }
 

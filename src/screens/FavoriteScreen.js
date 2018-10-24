@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Container, Content, Header, Left, Body, Icon } from 'native-base';
-import { DrawerButton } from '../components/SimpleComponents';
+import { DrawerButton } from '../components/StatelessComponents';
 
 
 class FavoriteScreen extends Component {
