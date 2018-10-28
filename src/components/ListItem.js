@@ -73,7 +73,7 @@ class ListItem extends PureComponent {
   }
 
   render() {
-    let files = this.props.item.Files || []
+    let photos = this.props.item.Files || {}
 
     return (
       <View style={{ height: ITEM_HEIGHT }}>
@@ -88,9 +88,9 @@ class ListItem extends PureComponent {
             loop={false}
           >
             {/* render photos */}
-            {Object.keys(files).map((key, idx) => {
-              // let uri = this.props.item.Files[key].path
-              let uri = this.props.item.Files[key].thumbnails[0].path
+            {Object.keys(photos).splice(0, 5).map((key, idx) => {
+            // {Object.keys(photos).map((key, idx) => {
+              let uri = photos[key].path.replace('full', '400x300')
               return (
                 <View key={idx} style={styles.slide}>
                   <Image
@@ -176,20 +176,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   dot: {
-    backgroundColor: 'rgba(255,255,255,.5)',
+    backgroundColor: 'rgba(150,150,150,.5)',
     width: 6,
     height: 6,
     borderRadius: 7,
     marginHorizontal: 4
   },
   activeDot: {
-    backgroundColor: '#fff',
-    width: 8,
-    height: 8,
+    backgroundColor: '#469fcc',
+    width: 7,
+    height: 7,
     borderRadius: 7,
     marginHorizontal: 4
   },
   pagination: {
-    bottom: 10
+    bottom: -20
   }
 });

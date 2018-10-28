@@ -1,23 +1,24 @@
 Замечания:
   1) Не скролиться когда попадаешь на текст-инпут; x
   2) Открывается drawer menu в DeatilsScreen.
-  3) check flex layout performance;
+  3) Проверить как flex layout влияет на производительность;
+  4) Попробывать ограничить количество фото и проверить производительность в списка объектов;
+      Попробывал, стало лучше. 
 
 
 Задачи:
-  1) Object details page;
-    1.1) Shared Element(Photo carousel) Transition; -
+  1) Шоуер объекта;
+    1.1) Shared Element(Photo carousel) Transition; Пока не надо;
     1.2) Base information(fields); x
   2) Krisha API;  
-    2.1) Search filter;
-    2.2) Search result;
-    2.3) Get advert details and show them; x
+    2.1) Фильтры поиска;
+    2.2) Результат поиска;
+    2.3) Получить и показать детали объекта; x
   3) Logo, Splash screen, StatusBar, Mask images; 
-  4) Images lazy loading;
-  5) Make carousel pagination like in instagram;
-
-
-
+  4) Ленивая подгрузка фоток;
+  5) Сделать пагинацию как в инстаграме;
+  6) Отображение фильтров в зависимости от типа объекта;
+  7) Инпут для ЖК;
 
 
 
