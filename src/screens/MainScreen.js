@@ -15,6 +15,8 @@ import {
   Icon,
   Left,
   Right,
+  Button,
+  Title,
 } from 'native-base';
 import { DrawerButton } from '../components/StatelessComponents';
 import ListItem from '../components/ListItem';
@@ -26,11 +28,13 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../Consts';
 class MainScreen extends Component {
 
   state = {
+    title: 'Все объекты',
     loading: true,
     refreshing: false,
     loadingMore: false,
     page: 1,
     items: [],
+    params: {}
   }
 
   componentDidMount() {
@@ -39,7 +43,7 @@ class MainScreen extends Component {
 
   loadItems = () => {
     krishaApi
-      .list({ page: this.state.page })
+      .list({ page: this.state.page, ...this.state.params })
       .then(result => {
         // console.log({ result })
         this.setState({
@@ -51,14 +55,20 @@ class MainScreen extends Component {
       });
   }
 
-  openSearch = () => {
-    this.props.navigation.navigate('SearchScreen')
+  loadMore = () => {
+    this.setState({
+      page: this.state.page + 1,
+      loadingMore: true,
+      // loading: true,
+    }, () => {
+      setTimeout(() => this.loadItems(), 200);
+    })
   }
 
   keyExtractor = (item, idx) => item.id + '';
 
   renderItem = ({ item }) => (
-    <ListItem item={item} onOpen={this.onOpen} />
+    <ListItem item={item} onShow={this.onShow} />
   )
 
   renderFooter = () => (
@@ -70,14 +80,16 @@ class MainScreen extends Component {
     </View>
   )
 
-  loadMore = () => {
-    this.setState({
-      page: this.state.page + 1,
-      loadingMore: true,
-      // loading: true,
-    }, () => {
-      setTimeout(() => this.loadItems(), 200);
-    })
+  renderEmptyComponent = () => (
+    <ImageBackground
+      resizeMode="contain"
+      style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT }}
+      source={require('../../assets/img/mask-item.png')}>
+    </ImageBackground>
+  )
+
+  openSearch = () => {
+    this.props.navigation.navigate('SearchScreen', { onSearch: this.onSearch })
   }
 
   onRefresh = () => {
@@ -89,8 +101,20 @@ class MainScreen extends Component {
     })
   }
 
-  onOpen = (item) => {
+  onShow = (item) => {
     this.props.navigation.navigate('DetailsScreen', { item })
+  }
+
+  onSearch = (params) => {
+    this.setState({
+      items: [],
+      page: 1,
+      params,
+      loading: true,
+      title: params.title,
+    });
+
+    this.loadItems();
   }
 
   render() {
@@ -101,8 +125,9 @@ class MainScreen extends Component {
           <DrawerButton navigation={this.props.navigation} />
           <Body>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-              <Text style={styles.title}>Продажа</Text>
-              <Text style={styles.title}>Дома</Text>
+              {this.state.title.split(' ').map(text => (
+                <Text style={styles.title} key={text}>{text}</Text>
+              ))}
             </View>
           </Body>
           <Right>
@@ -117,16 +142,7 @@ class MainScreen extends Component {
         <Content contentContainerStyle={styles.container}>
 
           {this.state.loading ?
-            (
-              <ImageBackground
-                style={{ flex: 1, width: SCREEN_WIDTH }}
-                source={require('../../assets/img/mask-item.png')}>
-                <ActivityIndicator
-                  style={this.state.loadingMore ? null : styles.spinner}
-                  size="large"
-                />
-              </ImageBackground>
-            )
+            <ActivityIndicator style={this.state.loadingMore ? null : styles.spinner} size="large" />
             : null
           }
 
@@ -138,6 +154,7 @@ class MainScreen extends Component {
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
             ListFooterComponent={this.renderFooter}
+            ListEmptyComponent={this.renderEmptyComponent}
             onEndReached={this.loadMore}
             onRefresh={this.onRefresh}
             refreshing={this.state.refreshing}
@@ -160,12 +177,10 @@ const styles = StyleSheet.create({
   title: {
     padding: 5,
     fontSize: 16,
-    // backgroundColor: '#eee',
-    // borderRadius: 3,
-    // marginLeft: 5,
   },
   spinner: {
     ...StyleSheet.absoluteFill,
     paddingVertical: 15,
+    zIndex: 10
   },
 });

@@ -7,19 +7,43 @@ const URL_LIST = `https://api.krisha.kz/v1/adverts/getMany.json?appId=${APP_ID}&
 const URL_ITEM = `https://api.krisha.kz/v1/adverts/getOne.json?appId=${APP_ID}&appKey=${APP_KEY}`
 
 // search params
-const CAT_ID_KEY = "catId"
-const PRICE_FROM = "query[data][_price.srch][from]"
-const PRICE_TO = "query[data][_price.srch][to]"
-const LIVE_ROOMS_FROM = "query[data][live.rooms][from]";
-const LIVE_ROOMS_TO = "query[data][live.rooms][to]";
-const TEXT = "text"
-const FROM_WHO = "query[data][who]" // 1-owner, 2-agency, 3-company
-const CHECKED_AGENCIES = "query[data][checked]"
-const PRICE_CURRENCY = "query[data][price.currency]"
-const TOP_LEFT = "query[data][map.location][geo_bounding_box][top_left]"
-const BOTTOM_RIGHT = "query[data][map.location][geo_bounding_box][bottom_right]"
+export const CAT_ID_KEY = "catId"
+export const PRICE_FROM = "query[data][_price.srch][from]"
+export const PRICE_TO = "query[data][_price.srch][to]"
+export const LIVE_ROOMS_FROM = "query[data][live.rooms][from]";
+export const LIVE_ROOMS_TO = "query[data][live.rooms][to]";
+export const TEXT = "text"
+export const FROM_WHO = "query[data][who]" // 1-owner, 2-agency, 3-company
+export const CHECKED_AGENCIES = "query[data][checked]"
+export const PRICE_CURRENCY = "query[data][price.currency]"
+export const TOP_LEFT = "query[data][map.location][geo_bounding_box][top_left]"
+export const BOTTOM_RIGHT = "query[data][map.location][geo_bounding_box][bottom_right]"
 
 
+//
+export const category = {
+  flatSell: 1,
+  flatRent: 2,
+  houseSell: 3,
+  houseRent: 4,
+  countryHouseSell: 5,
+  countryHouseRent: 6,
+  buildingSell: 7,
+  buildingRent: 8,
+  roomRent: 9,
+  marketSell: 10,
+  marketRent: 11,
+  officeSell: 12,
+  officeRent: 13,
+  landSell: 14,
+  warehouseSell: 15,
+  warehouseRent: 16,
+  otherSell: 17,
+  otherRent: 18,
+  takeRent: 43,
+  quartersSell: 44,
+  quartersRent: 45,
+}
 
 // Dicts
 export const renovationType = {
@@ -409,7 +433,9 @@ const fieldDefinitions = {
 export function search(params = {}) {
   let page = params.page || 1
   let offset = (page - 1) * LIMIT
-  let url = `${URL_SEARCH}&offset=${offset}`
+  let queryCatId = params[CAT_ID_KEY] ? `&catId=${params[CAT_ID_KEY]}` : ''
+
+  let url = `${URL_SEARCH}&offset=${offset}${queryCatId}`
 
   return fetch(url)
     .then(response => response.json())

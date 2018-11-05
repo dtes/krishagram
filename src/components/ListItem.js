@@ -4,6 +4,7 @@ import { Icon } from 'native-base';
 import Swiper from 'react-native-swiper';
 import { months } from '../data';
 import { ITEM_WIDTH, ITEM_HEIGHT, ITEM_PHOTO_HEIGHT } from '../Consts';
+import { category } from '../krishApi';
 
 const DEFAULT_PHOTO = '../../assets/img/mask-item.png'
 
@@ -15,39 +16,45 @@ class ListItem extends PureComponent {
   }
 
   showDetails = () => {
-    if (this.props.onOpen) {
-      this.props.onOpen(this.props.item)
+    if (this.props.onShow) {
+      this.props.onShow(this.props.item)
     }
   }
 
   getTitle = (item) => {
-    switch (item.service_data.cat_id) {
-      case 1:
-      case 2:
+    switch (parseInt(item.service_data.cat_id)) {
+      case category.flatSell:
+      case category.flatRent:
         return `${item.data['live.rooms']}-комн - ${item.data['live.square']} м² - ${item.data['house.floor_num']} этажей`
-      case 3:
+      case category.houseSell:
+      case category.houseRent:
         return `${item.data['live.rooms']}-комн - ${item.data['live.square']} м² - ${item.data['land.square']} сот`
-      case 14:
+      case category.countryHouseSell:
+      case category.countryHouseRent:
+        return `Дача с участком ${item.data['land.square']} сот`
+      case category.buildingSell:
+      case category.buildingRent:
+        return `Здание площадью ${item.data['com.square']}`
+      case category.roomRent:
+        return `${item.data['live.rooms']} комнаты - ${item.data['live.square']} м²`
+      case category.marketSell:
+      case category.marketRent:
+        return `Магазин площадью ${item.data['com.square']}`
+      case category.officeSell:
+      case category.officeRent:
+        return `Офис площадью ${item.data['com.square']}`
+      case category.landSell:
         let unit = item.data['land.square_au'] == 2 ? 'сот' : 'га';
         return `Участок ${item.data['land.square_a']} ${unit}`
-      case 12:
-        return `Офис площадью ${item.data['com.square']}`
-      case 44:
-      case 45:
-        return `Помещение площадью ${item.data['com.square']}`
-      case 11:
-        return `Магазин площадью ${item.data['com.square']}`
-      case 17:
-      case 18:
-        return item.data['title']
-      case 7:
-        return `Здание площадью ${item.data['com.square']}`
-      case 5:
-        return `Дача с участком ${item.data['land.square']} сот`
-      case 16:
+      case category.warehouseSell:
+      case category.warehouseRent:
         return 'Склад или промбаза'
-      case 9:
-        return `${item.data['live.rooms']} комнаты - ${item.data['live.square']} м²`
+      case category.otherSell:
+      case category.otherRent:
+        return item.data['title']
+      case category.quartersSell:
+      case category.quartersRent:
+        return `Помещение площадью ${item.data['com.square']}`
       default:
         return 'Название не опр.'
     }
@@ -89,7 +96,7 @@ class ListItem extends PureComponent {
           >
             {/* render photos */}
             {Object.keys(photos).splice(0, 5).map((key, idx) => {
-            // {Object.keys(photos).map((key, idx) => {
+              // {Object.keys(photos).map((key, idx) => {
               let uri = photos[key].path.replace('full', '400x300')
               return (
                 <View key={idx} style={styles.slide}>

@@ -16,6 +16,7 @@ import QuartersFilters from '../components/search/quartersFilters';
 import BuildingFilters from '../components/search/buildingFiltesr';
 import MarketFilters from '../components/search/marketFilters';
 import WarehouseFilters from '../components/search/warehouseFilters';
+import { category, CAT_ID_KEY } from '../krishApi';
 
 
 class SearchScreen extends Component {
@@ -57,6 +58,57 @@ class SearchScreen extends Component {
     }
 
     return null;
+  }
+
+  getCategory = () => {
+    let objectType = this.state.selectedObjectType;
+    let operationType = this.state.selectedOperationType
+    let isSell = operationType == 1
+    let catId
+
+    if (objectType == 1) {
+      catId = isSell ? category.flatSell : category.flatRent
+    } else if (objectType == 2) {
+      catId = isSell ? category.houseSell : category.houseRent
+    } else if (objectType == 3) {
+      catId = isSell ? category.countryHouseSell : category.countryHouseRent
+    } else if (objectType == 4) {
+      catId = category.landSell
+    } else if (objectType == 5) {
+      catId = isSell ? category.officeSell : category.officeRent
+    } else if (objectType == 6) {
+      catId = isSell ? category.quartersSell : category.quartersRent
+    } else if (objectType == 7) {
+      catId = isSell ? category.buildingSell : category.buildingRent
+    } else if (objectType == 8) {
+      catId = isSell ? category.marketSell : category.marketRent
+    } else if (objectType == 9) {
+      catId = isSell ? category.warehouseSell : category.warehouseRent
+    } else if (objectType == 10) {
+      catId = isSell ? category.otherSell : category.otherRent
+    }
+
+    return catId
+  }
+
+  search = () => {
+    let onSearch = this.props.navigation.getParam('onSearch')
+    let params = {}
+    let objectType = this.state.selectedObjectType;
+    let operationType = this.state.selectedOperationType
+    let isSell = operationType == 1
+
+    let catId = this.getCategory()
+    if (catId) params[CAT_ID_KEY] = catId
+    
+    let title = '';
+    title += operationTypes.find(item => item.id == operationType).name;
+    title += ' '
+    title += objectTypes.find(item => item.id == objectType).name;
+    params['title'] = title
+
+    this.props.navigation.goBack();
+    onSearch(params);
   }
 
   render() {
@@ -124,7 +176,7 @@ class SearchScreen extends Component {
           <View style={{ height: 55, bottom: 0, left: 0, paddingHorizontal: 10 }}>
             <Button
               title="Поиск"
-              onPress={() => { }}
+              onPress={this.search}
             />
           </View>
 
